@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAKI — The Body Lab | Personal Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#0B0C0E;
+  --panel:#101215;
+  --card:#15181C;
+  --card-2:#1B1F24;
+  --line:#25292F;
+  --line-2:#343A41;
+  --txt:#ECEFF2;
+  --mut:#8F979F;
+  --dim:#5A6169;
+  --tick:#3C424A;
+  --chrome-a:#F4F6F8;
+  --chrome-b:#AEB8C1;
+  --chrome-c:#79838C;
+  --radius:14px;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Manrope',sans-serif;
+  --disp:'Anton',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:#3A424B;color:#fff}
+
+/* lab graph-paper backdrop */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:96px 96px,96px 96px,24px 24px,24px 24px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 100%);
+}
+main,header,footer{position:relative;z-index:1}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+.chrome{
+  background:linear-gradient(175deg,var(--chrome-a) 8%,var(--chrome-b) 55%,var(--chrome-c) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ============ NAV ============ */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,12,14,.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:baseline;gap:12px;cursor:pointer;text-decoration:none}
+.logo b{
+  font-family:var(--disp);font-size:26px;letter-spacing:.06em;
+  background:linear-gradient(180deg,#F4F6F8,#9AA4AD);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.logo span{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;border:1px solid var(--line);padding:3px 8px;border-radius:4px}
+nav.links{display:flex;gap:4px}
+nav.links a{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);text-decoration:none;padding:9px 16px;border-radius:8px;
+  transition:color .2s,background .2s;position:relative;
+}
+nav.links a:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+nav.links a.on{color:var(--txt)}
+nav.links a.on::after{
+  content:"";position:absolute;left:16px;right:16px;bottom:4px;height:1px;
+  background:linear-gradient(90deg,transparent,#C6CED6,transparent);
+}
+.nav-cta{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:#0B0C0E;background:linear-gradient(180deg,#F1F4F6,#B9C2CA);
+  padding:11px 20px;border-radius:9px;text-decoration:none;font-weight:600;
+  transition:transform .2s,box-shadow .2s;white-space:nowrap;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,210,220,.15)}
+@media(max-width:760px){
+  .nav-cta{display:none}
+  nav.links a{padding:9px 10px;font-size:11px}
+  .logo span{display:none}
+}
+
+/* ============ PAGES ============ */
+.page{display:none;animation:pageIn .45s ease both}
+.page.on{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ============ HERO ============ */
+.hero{padding:88px 0 72px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--mut);
+  margin-bottom:26px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--tick)}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:#C6CED6;box-shadow:0 0 12px rgba(198,206,214,.7);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{
+  font-family:var(--disp);font-weight:400;
+  font-size:clamp(52px,7.4vw,96px);
+  line-height:.98;letter-spacing:.005em;text-transform:uppercase;
+}
+h1 .sub{display:block}
+.hero p.lede{margin:28px 0 36px;max-width:480px;color:var(--mut);font-size:17px}
+.hero p.lede strong{color:var(--txt);font-weight:600}
+.btn-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+  padding:15px 26px;border-radius:10px;text-decoration:none;cursor:pointer;border:none;
+  transition:transform .2s,box-shadow .2s,background .2s,border-color .2s;
+}
+.btn.solid{color:#0B0C0E;background:linear-gradient(180deg,#F1F4F6,#B4BDC6)}
+.btn.solid:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(200,210,220,.18)}
+.btn.ghost{color:var(--txt);background:transparent;border:1px solid var(--line-2)}
+.btn.ghost:hover{border-color:#5E6670;background:rgba(255,255,255,.03)}
+.hero-stats{display:flex;gap:0;margin-top:56px;border-top:1px solid var(--line)}
+.hstat{padding:22px 32px 0 0;margin-right:32px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat b{font-family:var(--disp);font-size:30px;letter-spacing:.02em;display:block;color:var(--txt)}
+.hstat i{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* barbell blueprint */
+.blueprint{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px;position:relative;overflow:hidden;
+}
+.blueprint::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:20px 20px;
+}
+.bp-head{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;position:relative}
+.bp-head b{color:var(--mut);font-weight:500}
+.blueprint svg{width:100%;height:auto;display:block;position:relative}
+.bp-foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.14em;margin-top:6px;position:relative}
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero{padding:56px 0 48px}
+  .hero-stats{flex-wrap:wrap;gap:0}
+  .hstat{padding-right:20px;margin-right:20px}
+}
+
+/* marquee */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--panel)}
+.mq-track{display:flex;gap:0;white-space:nowrap;animation:mq 30s linear infinite;width:max-content}
+.mq-track span{
+  font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);
+  padding:16px 0 16px 28px;
+}
+.mq-track span::after{content:"·";margin-left:28px;color:var(--tick)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ============ SECTIONS ============ */
+section{padding:88px 0}
+.sec-head{margin-bottom:52px}
+.sec-head .tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.sec-head .tag::before{content:"";width:8px;height:8px;border:1px solid var(--tick);transform:rotate(45deg)}
+h2{font-family:var(--disp);font-weight:400;font-size:clamp(34px,4.6vw,56px);letter-spacing:.01em;text-transform:uppercase;line-height:1.05}
+.sec-head p{color:var(--mut);max-width:560px;margin-top:14px}
+
+/* ============ PACKAGES ============ */
+.protocols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proto{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px 28px;display:flex;flex-direction:column;position:relative;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+}
+.proto:hover{transform:translateY(-6px);border-color:var(--line-2);box-shadow:0 24px 48px rgba(0,0,0,.4)}
+.proto.feat{
+  background:linear-gradient(180deg,#1C2025,#15181C);
+  border-color:#454C55;
+}
+.proto.feat::before{
+  content:"MOST PRESCRIBED";position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:#0B0C0E;font-weight:600;
+  background:linear-gradient(180deg,#F1F4F6,#B4BDC6);padding:5px 14px;border-radius:20px;white-space:nowrap;
+}
+.p-id{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}
+.p-id .lvl{display:flex;gap:3px}
+.p-id .lvl b{width:14px;height:4px;background:var(--tick);border-radius:2px}
+.p-id .lvl b.f{background:#C6CED6}
+.proto h3{font-family:var(--disp);font-weight:400;font-size:27px;letter-spacing:.03em;text-transform:uppercase}
+.proto .desc{color:var(--mut);font-size:14px;margin:10px 0 22px;min-height:44px}
+.price{display:flex;align-items:baseline;gap:8px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px}
+.price b{font-family:var(--disp);font-size:42px;letter-spacing:.01em}
+.price span{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.specs{list-style:none;flex:1;display:flex;flex-direction:column;gap:0}
+.specs li{
+  display:flex;justify-content:space-between;gap:12px;padding:11px 0;
+  border-bottom:1px dashed var(--line);font-size:13.5px;
+}
+.specs li:last-child{border-bottom:none}
+.specs .k{color:var(--mut)}
+.specs .v{font-family:var(--mono);font-size:12px;color:var(--txt);text-align:right}
+.specs .v.na{color:var(--dim)}
+.proto .btn{margin-top:26px;justify-content:center}
+@media(max-width:920px){.protocols{grid-template-columns:1fr;max-width:460px;margin:0 auto}.proto .desc{min-height:0}}
+
+/* ============ METHOD ============ */
+.method{border-top:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.step{padding:32px 26px;border-right:1px solid var(--line);background:var(--panel);transition:background .3s}
+.step:last-child{border-right:none}
+.step:hover{background:var(--card)}
+.step .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim);display:block;margin-bottom:16px}
+.step h4{font-family:var(--disp);font-weight:400;font-size:19px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+.step p{font-size:13.5px;color:var(--mut)}
+@media(max-width:920px){.steps{grid-template-columns:1fr 1fr}.step{border-bottom:1px solid var(--line)}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* ============ RESULTS ============ */
+.agg{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:56px}
+.agg-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;text-align:center}
+.agg-card b{font-family:var(--disp);font-size:40px;display:block;letter-spacing:.01em}
+.agg-card i{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+@media(max-width:920px){.agg{grid-template-columns:1fr 1fr}}
+
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .3s,border-color .3s}
+.case:hover{transform:translateY(-5px);border-color:var(--line-2)}
+.case-head{display:flex;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.case-head b{color:var(--mut);font-weight:500}
+
+.compare{position:relative;background:var(--panel);aspect-ratio:5/6;user-select:none;touch-action:none;cursor:ew-resize;overflow:hidden}
+.compare::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.layer svg{height:88%;width:auto}
+.layer.before{clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
+.divider{
+  position:absolute;top:0;bottom:0;left:var(--pos,50%);width:1px;
+  background:linear-gradient(180deg,transparent,#C6CED6 20%,#C6CED6 80%,transparent);
+  pointer-events:none;
+}
+.divider::after{
+  content:"◂ ▸";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:#0B0C0E;border:1px solid var(--line-2);color:#C6CED6;
+  font-size:10px;letter-spacing:2px;padding:7px 9px 7px 11px;border-radius:20px;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+.lab-tag{
+  position:absolute;top:14px;font-family:var(--mono);font-size:9px;letter-spacing:.22em;
+  text-transform:uppercase;padding:5px 10px;border-radius:4px;pointer-events:none;
+}
+.lab-tag.b{left:14px;color:var(--mut);border:1px dashed var(--tick)}
+.lab-tag.a{right:14px;color:#0B0C0E;background:linear-gradient(180deg,#F1F4F6,#B4BDC6);font-weight:600}
+.case-data{padding:18px 20px 22px}
+.case-data .row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.case-data .row:last-child{border-bottom:none}
+.case-data .k{color:var(--mut)}
+.case-data .v{font-family:var(--mono);font-size:12px}
+.case-data .delta{color:#C6CED6;font-weight:600}
+@media(max-width:920px){.cases{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+
+/* ============ CONTACT ============ */
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;align-items:start}
+.intake,.channels{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:34px}
+.channels .ch{display:flex;align-items:center;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}
+.channels .ch:first-of-type{padding-top:6px}
+.channels .ch:last-of-type{border-bottom:none}
+.ch .ic{
+  width:46px;height:46px;flex:none;border:1px solid var(--line-2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:#C6CED6;
+}
+.ch .ic svg{width:20px;height:20px}
+.ch b{display:block;font-size:14px;font-weight:700}
+.ch span{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.coords{
+  margin-top:26px;padding:18px 20px;border:1px dashed var(--tick);border-radius:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--dim);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;text-transform:uppercase;
+}
+.field{margin-bottom:18px}
+.field label{
+  display:block;font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:9px;
+}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  color:var(--txt);font-family:var(--sans);font-size:15px;padding:13px 16px;
+  transition:border-color .2s;outline:none;appearance:none;
+}
+.field textarea{resize:vertical;min-height:110px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#6A7480}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238F979F' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sent{
+  display:none;margin-top:18px;padding:16px 18px;border:1px solid #454C55;border-radius:10px;
+  background:var(--panel);font-family:var(--mono);font-size:12px;color:#C6CED6;letter-spacing:.06em;
+}
+.sent.show{display:block;animation:pageIn .4s ease}
+@media(max-width:920px){.contact-grid{grid-template-columns:1fr}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:34px 0;margin-top:40px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot .l{font-family:var(--disp);font-size:20px;letter-spacing:.06em;color:var(--mut)}
+.foot .r{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* reveal on scroll */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#home" data-nav="home"><b>YAKI</b><span>Body Lab</span></a>
+    <nav class="links">
+      <a href="#home" data-nav="home" class="on">Protocols</a>
+      <a href="#results" data-nav="results">Results</a>
+      <a href="#contact" data-nav="contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="#contact" data-nav="contact">Book Assessment</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ==================== PAGE: HOME / PACKAGES ==================== -->
+<div class="page on" id="page-home">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Personal Training Laboratory — Riyadh</div>
+        <h1><span class="chrome">Your body</span><span class="sub">is the experiment.</span></h1>
+        <p class="lede">YAKI treats training like science, not guesswork. Every rep is <strong>measured</strong>, every meal is <strong>calculated</strong>, every result is <strong>documented</strong>. Choose your protocol below.</p>
+        <div class="btn-row">
+          <a class="btn solid" href="#protocols" data-scroll>View Protocols</a>
+          <a class="btn ghost" href="#results" data-nav="results">See the Data →</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><b data-count="140">0</b><i>Clients tested</i></div>
+          <div class="hstat"><b><span data-count="1240">0</span> kg</b><i>Total fat removed</i></div>
+          <div class="hstat"><b><span data-count="96">0</span>%</b><i>Protocol adherence</i></div>
+        </div>
+      </div>
+
+      <div class="blueprint rv">
+        <div class="bp-head"><b>FIG. 01 — LOAD APPARATUS</b><span>SCALE 1:12</span></div>
+        <svg viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Technical blueprint drawing of a barbell">
+          <!-- dimension line top -->
+          <line x1="40" y1="46" x2="420" y2="46" stroke="#3C424A" stroke-width="1"/>
+          <line x1="40" y1="38" x2="40" y2="54" stroke="#3C424A"/>
+          <line x1="420" y1="38" x2="420" y2="54" stroke="#3C424A"/>
+          <text x="230" y="38" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#8F979F" letter-spacing="2">2200 MM</text>
+          <!-- bar -->
+          <rect x="40" y="146" width="380" height="8" rx="4" fill="#20242A" stroke="#59626C"/>
+          <!-- knurling marks -->
+          <g stroke="#454C55" stroke-width="1">
+            <line x1="150" y1="148" x2="150" y2="152"/><line x1="158" y1="148" x2="158" y2="152"/>
+            <line x1="166" y1="148" x2="166" y2="152"/><line x1="294" y1="148" x2="294" y2="152"/>
+            <line x1="302" y1="148" x2="302" y2="152"/><line x1="310" y1="148" x2="310" y2="152"/>
+          </g>
+          <!-- collars -->
+          <rect x="96" y="138" width="14" height="24" rx="3" fill="#262B31" stroke="#6A7480"/>
+          <rect x="350" y="138" width="14" height="24" rx="3" fill="#262B31" stroke="#6A7480"/>
+          <!-- plates left -->
+          <rect x="52" y="86" width="18" height="128" rx="6" fill="#1A1E23" stroke="#79838C" stroke-width="1.4"/>
+          <rect x="74" y="102" width="14" height="96" rx="5" fill="#1A1E23" stroke="#59626C"/>
+          <!-- plates right -->
+          <rect x="390" y="86" width="18" height="128" rx="6" fill="#1A1E23" stroke="#79838C" stroke-width="1.4"/>
+          <rect x="372" y="102" width="14" height="96" rx="5" fill="#1A1E23" stroke="#59626C"/>
+          <!-- center crosshair -->
+          <circle cx="230" cy="150" r="26" stroke="#3C424A" stroke-dasharray="4 4"/>
+          <line x1="230" y1="116" x2="230" y2="184" stroke="#3C424A" stroke-dasharray="3 4"/>
+          <line x1="196" y1="150" x2="264" y2="150" stroke="#3C424A" stroke-dasharray="3 4"/>
+          <!-- annotations -->
+          <line x1="61" y1="86" x2="61" y2="66" stroke="#3C424A"/>
+          <text x="61" y="60" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#5A6169" letter-spacing="1">25 KG</text>
+          <line x1="357" y1="138" x2="357" y2="234" stroke="#3C424A" stroke-dasharray="2 3"/>
+          <text x="357" y="248" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#5A6169" letter-spacing="1">LOCK COLLAR</text>
+          <line x1="230" y1="184" x2="230" y2="228" stroke="#3C424A" stroke-dasharray="2 3"/>
+          <text x="230" y="244" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#5A6169" letter-spacing="1">GRIP CENTER Ø28MM</text>
+          <!-- dimension bottom -->
+          <line x1="52" y1="270" x2="108" y2="270" stroke="#3C424A"/>
+          <line x1="52" y1="263" x2="52" y2="277" stroke="#3C424A"/>
+          <line x1="108" y1="263" x2="108" y2="277" stroke="#3C424A"/>
+          <text x="80" y="290" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#5A6169" letter-spacing="1">450 MM</text>
+        </svg>
+        <div class="bp-foot"><span>YAKI-LAB / DOC.0426</span><span>REV. C — APPROVED</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="mq-track">
+      <span>Hypertrophy</span><span>Fat Loss</span><span>Strength</span><span>Mobility</span><span>Nutrition Science</span><span>Body Composition</span><span>Recovery</span><span>Performance</span>
+      <span>Hypertrophy</span><span>Fat Loss</span><span>Strength</span><span>Mobility</span><span>Nutrition Science</span><span>Body Composition</span><span>Recovery</span><span>Performance</span>
+    </div>
+  </div>
+
+  <section id="protocols">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="tag">Section A — Pricing</div>
+        <h2>Training <span class="chrome">Protocols</span></h2>
+        <p>Three levels of intervention. Every protocol starts with a full body-composition scan and ends with documented, measurable change.</p>
+      </div>
+
+      <div class="protocols">
+        <article class="proto rv">
+          <div class="p-id"><span>Protocol 01</span><span class="lvl"><b class="f"></b><b></b><b></b></span></div>
+          <h3>Baseline</h3>
+          <p class="desc">For starting your first structured program with expert oversight.</p>
+          <div class="price"><b>899</b><span>SAR / month</span></div>
+          <ul class="specs">
+            <li><span class="k">Sessions</span><span class="v">8 / month</span></li>
+            <li><span class="k">Program design</span><span class="v">Monthly</span></li>
+            <li><span class="k">Body-composition scan</span><span class="v">1× / month</span></li>
+            <li><span class="k">Nutrition plan</span><span class="v">Starter macros</span></li>
+            <li><span class="k">WhatsApp support</span><span class="v">48h response</span></li>
+            <li><span class="k">Progress report</span><span class="v na">—</span></li>
+          </ul>
+          <a class="btn ghost" href="#contact" data-nav="contact" data-proto="Baseline">Start Baseline</a>
+        </article>
+
+        <article class="proto feat rv">
+          <div class="p-id"><span>Protocol 02</span><span class="lvl"><b class="f"></b><b class="f"></b><b></b></span></div>
+          <h3>Compound</h3>
+          <p class="desc">The full lab experience — training, nutrition, and data working as one system.</p>
+          <div class="price"><b>1,599</b><span>SAR / month</span></div>
+          <ul class="specs">
+            <li><span class="k">Sessions</span><span class="v">12 / month</span></li>
+            <li><span class="k">Program design</span><span class="v">Bi-weekly</span></li>
+            <li><span class="k">Body-composition scan</span><span class="v">2× / month</span></li>
+            <li><span class="k">Nutrition plan</span><span class="v">Full meal plan</span></li>
+            <li><span class="k">WhatsApp support</span><span class="v">Same day</span></li>
+            <li><span class="k">Progress report</span><span class="v">Monthly PDF</span></li>
+          </ul>
+          <a class="btn solid" href="#contact" data-nav="contact" data-proto="Compound">Start Compound</a>
+        </article>
+
+        <article class="proto rv">
+          <div class="p-id"><span>Protocol 03</span><span class="lvl"><b class="f"></b><b class="f"></b><b class="f"></b></span></div>
+          <h3>Apex</h3>
+          <p class="desc">Maximum precision for competition prep or aggressive transformation goals.</p>
+          <div class="price"><b>2,799</b><span>SAR / month</span></div>
+          <ul class="specs">
+            <li><span class="k">Sessions</span><span class="v">20 / month</span></li>
+            <li><span class="k">Program design</span><span class="v">Weekly</span></li>
+            <li><span class="k">Body-composition scan</span><span class="v">Weekly</span></li>
+            <li><span class="k">Nutrition plan</span><span class="v">Chef-ready + supps</span></li>
+            <li><span class="k">WhatsApp support</span><span class="v">Priority 24/7</span></li>
+            <li><span class="k">Progress report</span><span class="v">Weekly PDF</span></li>
+          </ul>
+          <a class="btn ghost" href="#contact" data-nav="contact" data-proto="Apex">Start Apex</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="method">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="tag">Section B — Method</div>
+        <h2>The <span class="chrome">Lab Cycle</span></h2>
+        <p>Every client moves through the same scientific loop — because a result you can't measure is a result you can't trust.</p>
+      </div>
+      <div class="steps rv">
+        <div class="step"><span class="n">PHASE 01</span><h4>Assess</h4><p>Full body-composition scan, movement screen, and lifestyle audit. We establish your true baseline.</p></div>
+        <div class="step"><span class="n">PHASE 02</span><h4>Prescribe</h4><p>A training and nutrition protocol engineered around your data — not a template copied from someone else.</p></div>
+        <div class="step"><span class="n">PHASE 03</span><h4>Execute</h4><p>Coached sessions with tracked loads, tempo, and recovery. Nothing is left to feeling.</p></div>
+        <div class="step"><span class="n">PHASE 04</span><h4>Re-test</h4><p>Scans repeat on schedule. The data decides the next cycle — and proves the last one worked.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: RESULTS ==================== -->
+<div class="page" id="page-results">
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="tag">Section C — Evidence</div>
+        <h2>Case <span class="chrome">Files</span></h2>
+        <p>Real client outcomes, documented like lab reports. Drag the divider on each scan to compare intake vs. final measurement.</p>
+      </div>
+
+      <div class="agg">
+        <div class="agg-card rv"><b data-count="140">0</b><i>Closed case files</i></div>
+        <div class="agg-card rv"><b>-<span data-count="9">0</span>.4</b><i>Avg. kg fat lost</i></div>
+        <div class="agg-card rv"><b>+<span data-count="4">0</span>.1</b><i>Avg. kg muscle gained</i></div>
+        <div class="agg-card rv"><b><span data-count="16">0</span> wk</b><i>Avg. protocol length</i></div>
+      </div>
+
+      <div class="cases">
+
+        <article class="case rv">
+          <div class="case-head"><b>CASE FILE / YK-0117</b><span>M · 31Y</span></div>
+          <div class="compare" data-compare style="--pos:50%">
+            <div class="layer after">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="After silhouette — lean physique">
+                <circle cx="100" cy="34" r="21" fill="#2A2F36" stroke="#8F979F"/>
+                <path d="M100 58 C74 58 56 70 51 92 C47 110 46 128 52 146 C58 162 62 172 61 186 C58 214 62 258 66 318 L86 318 C89 274 92 244 96 224 L100 214 L104 224 C108 244 111 274 114 318 L134 318 C138 258 142 214 139 186 C138 172 142 162 148 146 C154 128 153 110 149 92 C144 70 126 58 100 58 Z" fill="#2A2F36" stroke="#AEB8C1" stroke-width="1.5"/>
+                <line x1="30" y1="100" x2="170" y2="100" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="103" font-family="IBM Plex Mono" font-size="8" fill="#8F979F">104</text>
+                <line x1="30" y1="150" x2="170" y2="150" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="153" font-family="IBM Plex Mono" font-size="8" fill="#8F979F">81</text>
+              </svg>
+            </div>
+            <div class="layer before">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="Before silhouette — heavier physique">
+                <circle cx="100" cy="34" r="21" fill="#1D2126" stroke="#5A6169"/>
+                <path d="M100 58 C72 58 54 72 49 94 C43 116 40 140 46 162 C52 180 56 190 55 202 C52 226 58 264 63 318 L86 318 C89 278 92 250 96 230 L100 220 L104 230 C108 250 111 278 114 318 L137 318 C142 264 148 226 145 202 C144 190 148 180 154 162 C160 140 157 116 151 94 C146 72 128 58 100 58 Z" fill="#1D2126" stroke="#59626C" stroke-width="1.5"/>
+                <line x1="30" y1="100" x2="170" y2="100" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="103" font-family="IBM Plex Mono" font-size="8" fill="#5A6169">109</text>
+                <line x1="30" y1="150" x2="170" y2="150" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="153" font-family="IBM Plex Mono" font-size="8" fill="#5A6169">98</text>
+              </svg>
+            </div>
+            <div class="divider"></div>
+            <span class="lab-tag b">Intake</span>
+            <span class="lab-tag a">Week 16</span>
+          </div>
+          <div class="case-data">
+            <div class="row"><span class="k">Weight</span><span class="v">96.0 → 84.5 kg <span class="delta">−11.5</span></span></div>
+            <div class="row"><span class="k">Body fat</span><span class="v">29% → 17% <span class="delta">−12 pts</span></span></div>
+            <div class="row"><span class="k">Protocol</span><span class="v">Compound · 16 wk</span></div>
+          </div>
+        </article>
+
+        <article class="case rv">
+          <div class="case-head"><b>CASE FILE / YK-0093</b><span>F · 27Y</span></div>
+          <div class="compare" data-compare style="--pos:50%">
+            <div class="layer after">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="After silhouette — toned physique">
+                <circle cx="100" cy="34" r="20" fill="#2A2F36" stroke="#8F979F"/>
+                <path d="M100 56 C78 56 64 68 60 88 C56 106 57 122 62 138 C67 152 64 164 58 178 C52 194 54 210 60 224 C64 236 66 272 68 318 L88 318 C90 276 93 248 97 230 L100 222 L103 230 C107 248 110 276 112 318 L132 318 C134 272 136 236 140 224 C146 210 148 194 142 178 C136 164 133 152 138 138 C143 122 144 106 140 88 C136 68 122 56 100 56 Z" fill="#2A2F36" stroke="#AEB8C1" stroke-width="1.5"/>
+                <line x1="30" y1="140" x2="170" y2="140" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="143" font-family="IBM Plex Mono" font-size="8" fill="#8F979F">66</text>
+              </svg>
+            </div>
+            <div class="layer before">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="Before silhouette">
+                <circle cx="100" cy="34" r="20" fill="#1D2126" stroke="#5A6169"/>
+                <path d="M100 56 C76 56 60 70 56 90 C51 112 52 132 58 150 C64 166 60 178 55 192 C49 208 52 222 58 234 C62 246 65 276 67 318 L88 318 C90 278 93 252 97 234 L100 226 L103 234 C107 252 110 278 112 318 L133 318 C135 276 138 246 142 234 C148 222 151 208 145 192 C140 178 136 166 142 150 C148 132 149 112 144 90 C140 70 124 56 100 56 Z" fill="#1D2126" stroke="#59626C" stroke-width="1.5"/>
+                <line x1="30" y1="140" x2="170" y2="140" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="172" y="143" font-family="IBM Plex Mono" font-size="8" fill="#5A6169">78</text>
+              </svg>
+            </div>
+            <div class="divider"></div>
+            <span class="lab-tag b">Intake</span>
+            <span class="lab-tag a">Week 12</span>
+          </div>
+          <div class="case-data">
+            <div class="row"><span class="k">Weight</span><span class="v">74.2 → 63.8 kg <span class="delta">−10.4</span></span></div>
+            <div class="row"><span class="k">Waist</span><span class="v">78 → 66 cm <span class="delta">−12</span></span></div>
+            <div class="row"><span class="k">Protocol</span><span class="v">Compound · 12 wk</span></div>
+          </div>
+        </article>
+
+        <article class="case rv">
+          <div class="case-head"><b>CASE FILE / YK-0141</b><span>M · 24Y</span></div>
+          <div class="compare" data-compare style="--pos:50%">
+            <div class="layer after">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="After silhouette — muscular physique">
+                <circle cx="100" cy="34" r="21" fill="#2A2F36" stroke="#8F979F"/>
+                <path d="M100 58 C70 58 50 72 45 96 C41 114 42 130 50 146 C57 160 61 170 60 184 C57 212 61 258 65 318 L86 318 C89 274 92 246 96 226 L100 216 L104 226 C108 246 111 274 114 318 L135 318 C139 258 143 212 140 184 C139 170 143 160 150 146 C158 130 159 114 155 96 C150 72 130 58 100 58 Z" fill="#2A2F36" stroke="#AEB8C1" stroke-width="1.5"/>
+                <line x1="26" y1="96" x2="174" y2="96" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="176" y="99" font-family="IBM Plex Mono" font-size="8" fill="#8F979F">112</text>
+              </svg>
+            </div>
+            <div class="layer before">
+              <svg viewBox="0 0 200 340" fill="none" aria-label="Before silhouette — slim physique">
+                <circle cx="100" cy="34" r="20" fill="#1D2126" stroke="#5A6169"/>
+                <path d="M100 58 C82 58 70 68 66 86 C62 102 62 120 66 138 C70 152 72 164 71 180 C69 210 71 260 73 318 L89 318 C91 274 93 246 96 226 L100 216 L104 226 C107 246 109 274 111 318 L127 318 C129 260 131 210 129 180 C128 164 130 152 134 138 C138 120 138 102 134 86 C130 68 118 58 100 58 Z" fill="#1D2126" stroke="#59626C" stroke-width="1.5"/>
+                <line x1="26" y1="96" x2="174" y2="96" stroke="#3C424A" stroke-dasharray="3 4"/>
+                <text x="176" y="99" font-family="IBM Plex Mono" font-size="8" fill="#5A6169">94</text>
+              </svg>
+            </div>
+            <div class="divider"></div>
+            <span class="lab-tag b">Intake</span>
+            <span class="lab-tag a">Week 20</span>
+          </div>
+          <div class="case-data">
+            <div class="row"><span class="k">Weight</span><span class="v">61.0 → 72.3 kg <span class="delta">+11.3</span></span></div>
+            <div class="row"><span class="k">Muscle mass</span><span class="v">+8.9 kg <span class="delta">lean gain</span></span></div>
+            <div class="row"><span class="k">Protocol</span><span class="v">Apex · 20 wk</span></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: CONTACT ==================== -->
+<div class="page" id="page-contact">
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="tag">Section D — Intake</div>
+        <h2>Enter the <span class="chrome">Lab</span></h2>
+        <p>Every experiment begins with an intake form. Fill it in and YAKI will contact you within 24 hours to schedule your first assessment.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="channels rv">
+          <div class="ch">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div>
+            <div><b>WhatsApp</b><span>+966 5X XXX XXXX</span></div>
+          </div>
+          <div class="ch">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+            <div><b>Email</b><span>lab@yaki.fit</span></div>
+          </div>
+          <div class="ch">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+            <div><b>The Lab</b><span>King Fahd Rd, Riyadh — Private studio</span></div>
+          </div>
+          <div class="ch">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div><b>Testing hours</b><span>Sat–Thu · 06:00 → 22:00</span></div>
+          </div>
+          <div class="coords"><span>LAT 24.7136° N</span><span>LNG 46.6753° E</span><span>YAKI-LAB-01</span></div>
+        </div>
+
+        <div class="intake rv">
+          <div class="field"><label>Subject name</label><input id="f-name" type="text" placeholder="Your full name" autocomplete="name"></div>
+          <div class="f-row">
+            <div class="field"><label>Phone</label><input id="f-phone" type="tel" placeholder="+966 5X XXX XXXX" autocomplete="tel"></div>
+            <div class="field"><label>Protocol of interest</label>
+              <select id="f-proto">
+                <option>Not sure yet</option>
+                <option>Baseline — 899 SAR</option>
+                <option>Compound — 1,599 SAR</option>
+                <option>Apex — 2,799 SAR</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Primary goal</label>
+            <select id="f-goal">
+              <option>Fat loss</option>
+              <option>Muscle gain</option>
+              <option>Strength &amp; performance</option>
+              <option>General health</option>
+            </select>
+          </div>
+          <div class="field"><label>Notes / injuries / schedule</label><textarea id="f-msg" placeholder="Tell us anything the lab should know before your assessment…"></textarea></div>
+          <button class="btn solid" id="f-send" style="width:100%;justify-content:center">Submit Intake Form</button>
+          <div class="sent" id="f-sent">✓ INTAKE RECEIVED — YAKI WILL CONTACT YOU WITHIN 24H TO BOOK YOUR ASSESSMENT.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="l">YAKI</span>
+    <span class="r">Body Lab · Riyadh — Train like a scientist</span>
+    <span class="r">© 2026 YAKI. All results documented.</span>
+  </div>
+</footer>
+
+<script>
+/* ---------- routing ---------- */
+const pages={home:'page-home',results:'page-results',contact:'page-contact'};
+function go(name){
+  if(!pages[name]) name='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(pages[name]).classList.add('on');
+  document.querySelectorAll('nav.links a').forEach(a=>a.classList.toggle('on',a.dataset.nav===name));
+  window.scrollTo({top:0,behavior:'auto'});
+  revealScan();countScan();
+}
+document.querySelectorAll('[data-nav]').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    const proto=el.dataset.proto;
+    go(el.dataset.nav);
+    history.replaceState(null,'','#'+el.dataset.nav);
+    if(proto){
+      const sel=document.getElementById('f-proto');
+      [...sel.options].forEach(o=>{if(o.text.startsWith(proto))sel.value=o.value||o.text;});
+      for(const o of sel.options){if(o.text.startsWith(proto)){sel.selectedIndex=o.index;break;}}
+    }
+  });
+});
+document.querySelectorAll('[data-scroll]').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    document.querySelector(el.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+window.addEventListener('hashchange',()=>go(location.hash.replace('#','')));
+if(location.hash) go(location.hash.replace('#',''));
+
+/* ---------- scroll reveal ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+function revealScan(){document.querySelectorAll('.page.on .rv:not(.in)').forEach(el=>io.observe(el));}
+revealScan();
+
+/* ---------- counters ---------- */
+const done=new WeakSet();
+function animateCount(el){
+  if(done.has(el))return;done.add(el);
+  const target=+el.dataset.count,dur=1400,t0=performance.now();
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){el.textContent=target;return;}
+  (function tick(t){
+    const p=Math.min((t-t0)/dur,1),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*e);
+    if(p<1)requestAnimationFrame(tick);
+  })(t0);
+}
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){animateCount(e.target);cio.unobserve(e.target);}}),{threshold:.4});
+function countScan(){document.querySelectorAll('.page.on [data-count]').forEach(el=>cio.observe(el));}
+countScan();
+
+/* ---------- before/after sliders ---------- */
+document.querySelectorAll('[data-compare]').forEach(box=>{
+  let drag=false;
+  const set=x=>{
+    const r=box.getBoundingClientRect();
+    const pct=Math.min(97,Math.max(3,((x-r.left)/r.width)*100));
+    box.style.setProperty('--pos',pct.toFixed(1)+'%');
+  };
+  box.addEventListener('pointerdown',e=>{drag=true;box.setPointerCapture(e.pointerId);set(e.clientX);});
+  box.addEventListener('pointermove',e=>{if(drag)set(e.clientX);});
+  ['pointerup','pointercancel'].forEach(ev=>box.addEventListener(ev,()=>drag=false));
+});
+
+/* ---------- intake form ---------- */
+document.getElementById('f-send').addEventListener('click',()=>{
+  const name=document.getElementById('f-name');
+  if(!name.value.trim()){name.focus();name.style.borderColor='#8F979F';setTimeout(()=>name.style.borderColor='',1500);return;}
+  document.getElementById('f-sent').classList.add('show');
+});
+</script>
+</body>
+</html>
